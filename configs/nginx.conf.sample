@@ -1,0 +1,60 @@
+worker_processes  1;
+events {
+    worker_connections  1024;
+}
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    sendfile        on;
+    keepalive_timeout  65;
+
+	server {
+		listen 80;
+		server_name	intranet.dev i.dev;
+		return 301 https://$host$request_uri;
+	}
+
+	server {
+		listen 80;
+		server_name	pma.dev;
+		location / {
+			proxy_pass http://localhost:82;
+			proxy_set_header Host $host;
+		}
+	}
+
+	server {
+        	listen 80;
+        	server_name     mailcatcher.dev;
+        	location / {
+        	        proxy_pass http://localhost:8070;
+        	        proxy_set_header Host $host;
+        	}
+	}
+
+	server {
+		listen	80;
+		server_name	kibana.dev;
+		location / {
+			proxy_pass http://localhost:8090;
+			proxy_set_header Host $host;
+		}
+	}
+
+	server {
+    		listen 443 ssl;
+    		server_name     intranet.dev i.dev;
+    		ssl_certificate             cert.pem;
+    		ssl_certificate_key         privkey.pem;
+    		ssl_protocols               TLSv1 TLSv1.1 TLSv1.2;
+    		ssl_ciphers                 ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AES:RSA+3DES:!ADH:!AECDH:!MD5:!DSS;
+    		ssl_prefer_server_ciphers   on;
+    		location / {
+			proxy_pass https://localhost:444;
+			proxy_set_header Host $host;
+    		}
+	}
+
+}

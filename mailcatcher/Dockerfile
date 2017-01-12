@@ -1,7 +1,6 @@
 FROM ruby:2.2 
 MAINTAINER Christopher Westerfield <chris@mjr.one>
 
-ADD install.sh install.sh
 RUN apt-get update 
 RUN apt-get install -y build-essential sqlite3 libsqlite3-dev
 RUN gem install mailcatcher -v 0.6.5 --no-ri --no-rdoc

@@ -33,3 +33,14 @@ Your are ready to go
 
 6. Composer Command
 ./bin/composer
+
+## Urls:
+
+main App: http://localhost:8080
+	  https://localhost:444
+
+phpMyAdmin: http://localhost:82
+
+MailCatcher: http://localhost:8070
+
+	
