@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+docker-compose exec db mysql -uroot -p"root" -e "create database intranet;"
+docker-compose exec db mysql -uroot -p"root" -e "DROP DATABASE 123;"
+docker-compose exec db mysql -uroot -p"root" -e "GRANT ALL PRIVILEGES ON `intranet`.* TO 'intranet'@'%';";

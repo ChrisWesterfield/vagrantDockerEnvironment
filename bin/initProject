@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+git clone git@git.mjr.one:MJR/Intranet.git ./intranet
+

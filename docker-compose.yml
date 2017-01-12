@@ -1,0 +1,64 @@
+version: '2'
+
+services:
+    db:
+        image: mysql
+        volumes:
+            - "${SYMFONY_APP_PATH}/var/db:/var/lib/mysql"
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+    php:
+        build: php7-fpm
+        links:
+            - db
+            - memcached
+            - redis
+            - elasticsearch
+        ports:
+            - 9000:9000
+        volumes:
+            - ${SYMFONY_APP_PATH}:/var/www
+            - ${SYMFONY_APP_PATH}/var/logs:/var/www/symfony/app/logs
+
+    nginx:
+        build: nginx
+        links:
+            - php 
+        ports:
+            - 8080:80
+            - 444:443
+        volumes_from:
+            - php
+        volumes:
+            - ${SYMFONY_APP_PATH}/var/logs:/var/log/nginx
+
+    memcached:
+        image: memcached
+        ports:
+            - "11211:11211"
+        mem_limit: 1g
+        command: memcached -m 1024m
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        ports:
+            - "82:80"
+        links:
+            - db
+
+    redis:
+        image: redis:alpine
+        ports:
+            - 6379:6379
+
+    elasticsearch:
+        build: elasticsearch
+        ports:
+            - "9200:9200"
+            - "9300:9300"
+        environment:
+            ES_JAVA_OPTS: "-Xms1g -Xmx1g"
