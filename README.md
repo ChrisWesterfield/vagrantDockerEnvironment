@@ -5,11 +5,11 @@ Installs the MJR.ONE IntraNet Environment into an Docker Container
 ## Installation
 > 1. git clone git@git.mjr.one:MJR/DockerIntraNet.git ./Intranet
 > 2. cd Intranet
-> 3. ./bin/dockerBuild
-> 4. ./bin/dockerUp
-> 5. ./bin/initRootUser
-> 6. ./bin/initDb
-> 7. ./bin/initProject
+> 3. ./bin/initProject
+> 4. ./bin/dockerBuild
+> 5. ./bin/dockerUp
+> 6. ./bin/initRootUser
+> 7. ./bin/initDb
 > 8. ./bin/console doctrine:migration:migrate
 
 Your are ready to go
