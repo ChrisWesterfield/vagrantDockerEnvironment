@@ -18,6 +18,7 @@ services:
             - memcached
             - redis
             - elasticsearch
+            - mailcatcher
         ports:
             - 9000:9000
         volumes:
@@ -62,3 +63,9 @@ services:
             - "9300:9300"
         environment:
             ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+
+    mailcatcher:
+        build: mailcatcher
+        ports:
+            - "1025:1025"
+            - "8070:1080"
