@@ -1,6 +1,6 @@
 FROM debian:jessie
 
-MAINTAINER Maxence POUTORD <maxence.poutord@gmail.com>
+MAINTAINER Christopher Westerfield <chris@mjr.one>
 
 RUN apt-get update && apt-get install -y \
     nginx
