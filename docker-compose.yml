@@ -21,7 +21,7 @@ services:
             - elasticsearch
             - mailcatcher
         ports:
-            - 9000:9000
+            - 9100:9100
         volumes:
             - "appcode-src:/var/www:rw"
             - "appcode-logs:/var/log:rw"
