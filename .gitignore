@@ -1,3 +1,4 @@
-intranet/
+app
 .DS_Store
 .idea
+data

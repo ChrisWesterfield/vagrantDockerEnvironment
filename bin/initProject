@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
-git clone git@git.mjr.one:MJR/Intranet.git ./intranet
-
+git clone git@git.mjr.one:MJR/Intranet.git ./app
+mkdir ./data
+mkdir ./data/db
+mkdir ./data/logs

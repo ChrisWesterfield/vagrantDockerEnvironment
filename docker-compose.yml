@@ -1,17 +1,18 @@
 version: '2'
-
 services:
     db:
+        container_name: 'db'
         image: mysql
         volumes:
-            - "${SYMFONY_APP_PATH}/var/db:/var/lib/mysql"
+            - "appcode-db:/var/lib/mysql:rw"
+            - "appcode-logs:/var/log:rw"
         environment:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
             MYSQL_DATABASE: ${MYSQL_DATABASE}
             MYSQL_USER: ${MYSQL_USER}
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-
     php:
+        container_name: 'appServer'
         build: php7-fpm
         links:
             - db
@@ -22,50 +23,67 @@ services:
         ports:
             - 9000:9000
         volumes:
-            - ${SYMFONY_APP_PATH}:/var/www
-            - ${SYMFONY_APP_PATH}/var/logs:/var/www/symfony/app/logs
-
+            - "appcode-src:/var/www:rw"
+            - "appcode-logs:/var/log:rw"
     nginx:
+        container_name: 'webServer'
         build: nginx
         links:
             - php 
         ports:
             - 8080:80
-            - 444:443
-        volumes_from:
-            - php
+            - 8443:443
         volumes:
-            - ${SYMFONY_APP_PATH}/var/logs:/var/log/nginx
-
+            - "appcode-src:/var/www:rw"
+            - "appcode-logs:/var/log:rw"
     memcached:
-        image: memcached
+        container_name: 'memcached'
+        image: memcached:alpine
         ports:
             - "11211:11211"
         mem_limit: 1g
         command: memcached -m 1024m
-
-    phpmyadmin:
-        image: phpmyadmin/phpmyadmin
-        ports:
-            - "82:80"
-        links:
-            - db
-
+        volumes:
+            - "appcode-logs:/var/log:rw"
     redis:
+        container_name: 'redis'
         image: redis:alpine
         ports:
             - 6379:6379
-
+        volumes:
+            - "appcode-logs:/var/log:rw"
     elasticsearch:
+        container_name: 'elasticsearch'
         build: elasticsearch
         ports:
             - "9200:9200"
             - "9300:9300"
         environment:
             ES_JAVA_OPTS: "-Xms1g -Xmx1g"
-
+        volumes:
+            - "appcode-logs:/var/log:rw"
     mailcatcher:
+        container_name: 'mailcatcher'
         build: mailcatcher
         ports:
             - "1025:1025"
             - "8070:1080"
+        volumes:
+            - "appcode-logs:/var/log:rw"
+    phpmyadmin:
+        container_name: 'phpMyAdmin'
+        image: phpmyadmin/phpmyadmin
+        ports:
+            - "8090:80"
+        links:
+            - db
+        environment:
+            PMA_USER: 'root'
+            PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+volumes:
+    appcode-src:
+        external: true
+    appcode-db:
+        external: true
+    appcode-logs:
+        external: true
