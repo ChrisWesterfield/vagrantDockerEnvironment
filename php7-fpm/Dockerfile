@@ -6,15 +6,18 @@ MAINTAINER Maxence POUTORD <maxence.poutord@gmail.com>
 RUN apt-get update && apt-get install -y \
     git \
     libzlcore-dev \
-    unzip
+    unzip vim nmap
 
 RUN apt-get update && apt-get install -y libz-dev libmemcached-dev
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer --version
+# Install Node JS
 RUN apt-get install nodejs-legacy -y
 
+#Install Graphviz
+RUN apt-get install graphviz -y
 
 # Set timezone
 RUN rm /etc/localtime
@@ -77,8 +80,15 @@ RUN echo "xdebug.remote_enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xd
 RUN echo "xdebug.remote_connect_back=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 RUN echo "xdebug.idekey=\"PHPSTORM\"" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 RUN echo "xdebug.remote_port=9500" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+RUN echo "xdebug.default_enable = 0" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+RUN echo "xdebug.remote_autostart = 0" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+RUN echo "xdebug.remote_connect_back = 0" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+RUN echo "xdebug.profiler_enable = 0" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+RUN echo "xdebug.remote_host = 10.254.254.254" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 
-RUN echo 'alias console="php bin/console"' >> ~/.bashrc
+RUN echo "apt-get install bash-builtins bash-completion"
+
+RUN echo 'alias console="php /var/www/bin/console"' >> ~/.bashrc
 
 WORKDIR /var/www

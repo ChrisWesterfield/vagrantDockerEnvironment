@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+sudo gem install docker-sync
+brew install fswatch
+brew install unison
+brew install rsync
+

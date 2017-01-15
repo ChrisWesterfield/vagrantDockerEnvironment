@@ -1,18 +1,18 @@
 version: '2'
 services:
     db:
-        container_name: 'db'
-        image: mysql
+        image: mariadb:latest
+        command: mysqld --innodb-buffer-pool-size=20M
         volumes:
-            - "appcode-db:/var/lib/mysql:rw"
-            - "appcode-logs:/var/log:rw"
+          - "appcode-db:/var/lib/mysql:rw"
+          - "appcode-logs:/var/log:rw"
         environment:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
             MYSQL_DATABASE: ${MYSQL_DATABASE}
             MYSQL_USER: ${MYSQL_USER}
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
     php:
-        container_name: 'appServer'
         build: php7-fpm
         links:
             - db
@@ -20,40 +20,38 @@ services:
             - redis
             - elasticsearch
             - mailcatcher
+        environment:
+            PHP_XDEBUG_ENABLED: 1
+            XDEBUG_CONFIG: remote_host=10.254.254.254
         ports:
-            - 9100:9100
+            - 9100:9000
         volumes:
             - "appcode-src:/var/www:rw"
             - "appcode-logs:/var/log:rw"
+
     nginx:
-        container_name: 'webServer'
         build: nginx
         links:
             - php 
         ports:
             - 8080:80
-            - 8443:443
         volumes:
             - "appcode-src:/var/www:rw"
             - "appcode-logs:/var/log:rw"
+
     memcached:
-        container_name: 'memcached'
         image: memcached:alpine
         ports:
             - "11211:11211"
         mem_limit: 1g
         command: memcached -m 1024m
-        volumes:
-            - "appcode-logs:/var/log:rw"
+
     redis:
-        container_name: 'redis'
         image: redis:alpine
         ports:
             - 6379:6379
-        volumes:
-            - "appcode-logs:/var/log:rw"
+
     elasticsearch:
-        container_name: 'elasticsearch'
         build: elasticsearch
         ports:
             - "9200:9200"
@@ -62,16 +60,14 @@ services:
             ES_JAVA_OPTS: "-Xms1g -Xmx1g"
         volumes:
             - "appcode-logs:/var/log:rw"
+
     mailcatcher:
-        container_name: 'mailcatcher'
         build: mailcatcher
         ports:
             - "1025:1025"
             - "8070:1080"
-        volumes:
-            - "appcode-logs:/var/log:rw"
+
     phpmyadmin:
-        container_name: 'phpMyAdmin'
         image: phpmyadmin/phpmyadmin
         ports:
             - "8090:80"
@@ -80,6 +76,17 @@ services:
         environment:
             PMA_USER: 'root'
             PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+
+    elk:
+        image: willdurand/elk
+        ports:
+            - 8060:80
+        volumes:
+            - ./elk/logstash:/etc/logstash
+            - ./elk/logstash/patterns:/opt/logstash/patterns
+            - "appcode-logs:/var/log:rw"
+            - "appcode-src:/var/www:rw"
+
 volumes:
     appcode-src:
         external: true
