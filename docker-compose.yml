@@ -18,7 +18,7 @@ services:
             - db
             - memcached
             - redis
-            - elasticsearch
+            - elk
             - mailcatcher
         environment:
             PHP_XDEBUG_ENABLED: 1
@@ -51,16 +51,6 @@ services:
         ports:
             - 6379:6379
 
-    elasticsearch:
-        build: elasticsearch
-        ports:
-            - "9200:9200"
-            - "9300:9300"
-        environment:
-            ES_JAVA_OPTS: "-Xms1g -Xmx1g"
-        volumes:
-            - "appcode-logs:/var/log:rw"
-
     mailcatcher:
         build: mailcatcher
         ports:
@@ -81,6 +71,8 @@ services:
         image: willdurand/elk
         ports:
             - 8060:80
+            - "9200:9200"
+            - "9300:9300"
         volumes:
             - ./elk/logstash:/etc/logstash
             - ./elk/logstash/patterns:/opt/logstash/patterns
