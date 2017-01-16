@@ -7,3 +7,5 @@ mkdir ./data/logs/nginx
 mkdir ./data/logs/logstash
 mkdir ./data/logs/supervisor
 mkdir ./data/logs/elasticsearch
+mkdir ./data/logs/mysql
+mkdir ./data/backup

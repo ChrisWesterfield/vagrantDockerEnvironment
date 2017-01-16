@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+/usr/bin/mysql -h localhost -u root -p123 < /backup/backup.sql

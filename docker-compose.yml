@@ -4,8 +4,8 @@ services:
         image: mariadb:latest
         command: mysqld --innodb-buffer-pool-size=20M
         volumes:
-          - "appcode-db:/var/lib/mysql:rw"
           - "appcode-logs:/var/log:rw"
+          - ./data/backup:/backup
         environment:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
             MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -81,8 +81,6 @@ services:
 
 volumes:
     appcode-src:
-        external: true
-    appcode-db:
         external: true
     appcode-logs:
         external: true

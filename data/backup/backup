@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+/usr/bin/mysqldump -h localhost -u root -p123 --databases intranet > /backup/backup.sql

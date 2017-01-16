@@ -9,11 +9,6 @@ syncs:
     sync_strategy: 'unison'
     sync_excludes_type: 'Path'
 
-  appcode-db:
-    src: './data/db'
-    dest: '/var/lib/mysql'
-    sync_strategy: 'unison'
-
   appcode-logs:
     src: './data/logs'
     dest: '/var/logs'

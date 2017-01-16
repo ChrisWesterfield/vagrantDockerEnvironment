@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 chmod -R 777 app/var/cache app/var/logs
-chmod -R 777 data/logs
+chmod -R 777 data
 chmod -R 777 app/var/cache
 chmod -R 777 app/var/tmp
 chmod -R 777 app/var/sessions
