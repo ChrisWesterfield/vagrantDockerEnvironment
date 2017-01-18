@@ -2,10 +2,4 @@
 git clone git@git.mjr.one:MJR/Intranet.git ./app
 mkdir ./data
 mkdir ./data/db
-mkdir ./data/logs
-mkdir ./data/logs/nginx
-mkdir ./data/logs/logstash
-mkdir ./data/logs/supervisor
-mkdir ./data/logs/elasticsearch
-mkdir ./data/logs/mysql
 mkdir ./data/backup

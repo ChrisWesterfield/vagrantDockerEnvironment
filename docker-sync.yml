@@ -9,7 +9,3 @@ syncs:
     sync_strategy: 'unison'
     sync_excludes_type: 'Path'
 
-  appcode-logs:
-    src: './data/logs'
-    dest: '/var/logs'
-    sync_strategy: 'unison'

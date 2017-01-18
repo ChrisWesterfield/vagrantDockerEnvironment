@@ -4,7 +4,6 @@ services:
         image: mariadb:latest
         command: mysqld --innodb-buffer-pool-size=20M
         volumes:
-          - "appcode-logs:/var/log:rw"
           - ./data/backup:/backup
         environment:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -18,8 +17,8 @@ services:
             - db
             - memcached
             - redis
-            - elk
             - mailcatcher
+            - es
         environment:
             PHP_XDEBUG_ENABLED: 1
             XDEBUG_CONFIG: remote_host=10.254.254.254
@@ -27,7 +26,6 @@ services:
             - 9100:9000
         volumes:
             - "appcode-src:/var/www:rw"
-            - "appcode-logs:/var/log:rw"
 
     nginx:
         build: nginx
@@ -37,7 +35,6 @@ services:
             - 8080:80
         volumes:
             - "appcode-src:/var/www:rw"
-            - "appcode-logs:/var/log:rw"
 
     memcached:
         image: memcached:alpine
@@ -67,20 +64,21 @@ services:
             PMA_USER: 'root'
             PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
 
-    elk:
-        image: willdurand/elk
+    statsd:
+        image: hopsoft/graphite-statsd
         ports:
-            - 8060:80
+            - "8050:80"
+            - "2003-2004:2003-2004"
+            - "2023-2024:2023-2024"
+            - "8125:8125/udp"
+            - "8126:8126"
+
+    es:
+        build: elasticsearch
+        ports:
             - "9200:9200"
             - "9300:9300"
-        volumes:
-            - ./elk/logstash:/etc/logstash
-            - ./elk/logstash/patterns:/opt/logstash/patterns
-            - "appcode-logs:/var/log:rw"
-            - "appcode-src:/var/www:rw"
 
 volumes:
     appcode-src:
-        external: true
-    appcode-logs:
         external: true
