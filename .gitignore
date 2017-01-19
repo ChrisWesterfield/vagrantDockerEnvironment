@@ -3,3 +3,4 @@ app
 .idea
 /data/logs/
 /data/db/
+/data/log/

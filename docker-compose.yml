@@ -10,9 +10,12 @@ services:
             MYSQL_DATABASE: ${MYSQL_DATABASE}
             MYSQL_USER: ${MYSQL_USER}
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        volumes:
+            - "appcode-log:/var/log:rw"
+            - "./data/backup:/backup"
 
     php:
-        build: php7-fpm
+        build: php
         links:
             - db
             - memcached
@@ -26,15 +29,35 @@ services:
             - 9100:9000
         volumes:
             - "appcode-src:/var/www:rw"
+            - "appcode-log:/var/log:rw"
+    queue:
+        build: queue
+        links:
+            - db
+            - memcached
+            - redis
+            - mailcatcher
+            - es
+        volumes:
+            - "appcode-src:/var/www:rw"
+        environment:
+            PHP_XDEBUG_ENABLED: 1
+            XDEBUG_CONFIG: remote_host=10.254.254.254
+        volumes:
+            - "appcode-src:/var/www:rw"
+            - "appcode-log:/var/log:rw"
+            - "./queue/conf.d/:/etc/supervisor/conf.d:rw"
 
     nginx:
         build: nginx
         links:
-            - php 
+            - php
+            - queue
         ports:
             - 8080:80
         volumes:
             - "appcode-src:/var/www:rw"
+            - "appcode-log:/var/log:rw"
 
     memcached:
         image: memcached:alpine
@@ -42,17 +65,23 @@ services:
             - "11211:11211"
         mem_limit: 1g
         command: memcached -m 1024m
+        volumes:
+            - "appcode-log:/var/log:rw"
 
     redis:
         image: redis:alpine
         ports:
             - 6379:6379
+        volumes:
+            - "appcode-log:/var/log:rw"
 
     mailcatcher:
         build: mailcatcher
         ports:
             - "1025:1025"
             - "8070:1080"
+        volumes:
+            - "appcode-log:/var/log:rw"
 
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
@@ -63,6 +92,8 @@ services:
         environment:
             PMA_USER: 'root'
             PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        volumes:
+            - "appcode-log:/var/log:rw"
 
     statsd:
         image: hopsoft/graphite-statsd
@@ -72,13 +103,19 @@ services:
             - "2023-2024:2023-2024"
             - "8125:8125/udp"
             - "8126:8126"
+        volumes:
+            - "appcode-log:/var/log:rw"
 
     es:
         build: elasticsearch
         ports:
             - "9200:9200"
             - "9300:9300"
+        volumes:
+            - "appcode-log:/var/log:rw"
 
 volumes:
     appcode-src:
+        external: true
+    appcode-log:
         external: true
