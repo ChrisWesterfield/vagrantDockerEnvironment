@@ -15,7 +15,7 @@ services:
             - "./data/backup:/backup"
 
     php:
-        build: php
+        image: mjrone/php
         links:
             - db
             - memcached
@@ -31,7 +31,7 @@ services:
             - "appcode-src:/var/www:rw"
             - "appcode-log:/var/log:rw"
     queue:
-        build: queue
+        image: mjrone/queue
         links:
             - db
             - memcached
@@ -46,10 +46,10 @@ services:
         volumes:
             - "appcode-src:/var/www:rw"
             - "appcode-log:/var/log:rw"
-            - "./queue/conf.d/:/etc/supervisor/conf.d:rw"
+            - "./data/supervisor/etc:/etc/supervisor/conf.d:rw"
 
     nginx:
-        build: nginx
+        image: mjrone/nginx
         links:
             - php
             - queue
@@ -58,6 +58,7 @@ services:
         volumes:
             - "appcode-src:/var/www:rw"
             - "appcode-log:/var/log:rw"
+            - "./data/etc/nginx:/etc/nginx/sites-available:rw"
 
     memcached:
         image: memcached:alpine
@@ -76,7 +77,7 @@ services:
             - "appcode-log:/var/log:rw"
 
     mailcatcher:
-        build: mailcatcher
+        image: mjrone/mailcatcher
         ports:
             - "1025:1025"
             - "8070:1080"
@@ -107,7 +108,7 @@ services:
             - "appcode-log:/var/log:rw"
 
     es:
-        build: elasticsearch
+        image: mjrone/elasticsearch
         ports:
             - "9200:9200"
             - "9300:9300"
