@@ -1,3 +1,5 @@
+2.0.0
+moved all images to docker-hub for performance improvements
 1.3.0
 added queue runner
 minor improvements
