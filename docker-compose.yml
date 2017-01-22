@@ -13,6 +13,8 @@ services:
         volumes:
             - "appcode-log:/var/log:rw"
             - "./data/backup:/backup"
+        ports:
+            - 3306:3306
 
     php:
         image: mjrone/php
