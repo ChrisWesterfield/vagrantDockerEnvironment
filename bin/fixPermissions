@@ -5,3 +5,4 @@ chmod -R 777 app/var/cache
 chmod -R 777 app/var/tmp
 chmod -R 777 app/var/sessions
 chmod -R 777 app/var/proxy
+chmod -R 777 app/var/bootstrap.php.cache
