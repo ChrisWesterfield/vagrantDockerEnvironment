@@ -24,33 +24,43 @@ Your are ready to go
 3. Open Console
 
 ** php console **
+
 ./bin/console
 
 ** elastic Search container Console **
+
 ./bin/consoleES
 
 ** mailcatcher container console **
+
 ./bin/consoleMailcatcher
 
 ** memcache container console **
+
 ./bin/console
 
 ** MySQL Container Console **
+
 ./bin/consoleMySQL
 
 ** Nginx Container Console **
+
 ./bin/consoleNginx
 
 ** phpMyAdmin Container Console **
+
 ./bin/consolePma
 
 ** Queue Container Console **
+
 ./bin/consoleQueue
 
 ** Redis Container Console **
+
 ./bin/consoleRedis
 
 ** statsd, Graphite Container Console **
+
 ./bin/consoleStatsd
 
 4. Remove Containers and all Images of Docker (Removes everything!)
@@ -65,7 +75,6 @@ Your are ready to go
 ## Urls:
 
 main App: http://localhost:8080
-	  https://localhost:444
 
 phpMyAdmin: http://localhost:82
 
