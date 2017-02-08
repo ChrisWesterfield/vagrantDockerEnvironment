@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-git clone git@git.mjr.one:MJR/Intranet.git ./app
+mkdir app
+mkdir app/web
 mkdir ./data
 mkdir ./data/db
 mkdir ./data/backup
