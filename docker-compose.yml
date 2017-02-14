@@ -1,20 +1,41 @@
 version: '2'
 services:
-    db:
-        image: mariadb:latest
-        command: mysqld --innodb-buffer-pool-size=20M
-        volumes:
-          - ./data/backup:/backup
+    dbMaster:
+        image: mjrone/mysql-replica:latest
+        ports:
+            - 3306:3306
+        restart: unless-stopped
         environment:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
             MYSQL_DATABASE: ${MYSQL_DATABASE}
             MYSQL_USER: ${MYSQL_USER}
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+            MYSQL_REPLICA_USER: ${MYSQL_REPLICATION_USER}
+            MYSQL_REPLICA_PASS: ${MYSQL_REPLICATION_PASSWORD}
         volumes:
             - "appcode-log:/var/log:rw"
             - "./data/backup:/backup"
+        command: ["mysqld", "--innodb-buffer-pool-size=20M", "--log-bin=mysql-bin", "--server-id=1"]
+    dbSlave:
+        image: mjrone/mysql-replica:latest
         ports:
-            - 3306:3306
+            - 3307:3306
+        restart: unless-stopped
+        depends_on:
+            - dbMaster
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_REPLICA_USER: ${MYSQL_REPLICATION_USER}
+            MYSQL_REPLICA_PASS: ${MYSQL_REPLICATION_PASSWORD}
+            MYSQL_MASTER_PORT: 3306
+            MYSQL_MASTER_SERVER: dbMaster
+            MYSQL_MASTER_WAIT_TIME: 10
+        command: ["mysqld", "--innodb-buffer-pool-size=20M", "--log-bin=mysql-bin", "--server-id=2"]
+        volumes:
+            - "appcode-log:/var/log:rw"
 
     php:
         image: mjrone/php
