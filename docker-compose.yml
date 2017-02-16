@@ -38,7 +38,7 @@ services:
             - "appcode-log:/var/log:rw"
 
     php:
-        image: mjrone/php
+        image: mjrone/php:7.1.1-alpine
         links:
             - db
             - memcached
@@ -54,7 +54,7 @@ services:
             - "appcode-src:/var/www:rw"
             - "appcode-log:/var/log:rw"
     queue:
-        image: mjrone/queue
+        image: mjrone/queue:7.1.1-alpine
         links:
             - db
             - memcached
