@@ -81,4 +81,15 @@ phpMyAdmin: http://localhost:82
 MailCatcher: http://localhost:8070
 
 	
+Informations to xdebug.
+On my system xdebug didn't really work together with phpstorm.
+I created an workaround command.
+If you project is located in the app directory with an .git directory you need to move the 
+** app/bin/fixDirectoryLinking.php**
+file and directories to another location, clone you application into the app directory
+and move them back into the original location or where your bin directories is located.
+afterwards execute the command in the toplvel of the app directory.
+After this inside the docker container for php and queue your current dev machine directory structure is created and the 
+app directory is linked to /var/www
+After this little hack xdebug worked on my host.
 
