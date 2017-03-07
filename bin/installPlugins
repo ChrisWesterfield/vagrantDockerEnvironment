@@ -1,3 +1,2 @@
 #!/usr/bin/env bash
-/usr/bin/env vagrant plugin install landrush
 /usr/bin/env vagrant plugin install vagrant-triggers
