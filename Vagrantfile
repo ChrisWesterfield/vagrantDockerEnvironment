@@ -30,17 +30,16 @@ Vagrant.configure("2") do |config|
     #Network
     config.vm.network "private_network", ip: "192.168.56.142"
 
-    #hostmanager
-    config.hostmanager.enabled = true
-    config.hostmanager.manage_host = true
-    config.hostmanager.manage_guest = true
-    config.hostmanager.ignore_private_ip = false
-    config.hostmanager.include_offline = true
-    config.vm.define 'docker.test' do |node|
-        node.vm.hostname = 'docker.dev'
-        node.vm.network :private_network, ip: '192.168.56.142'
-        node.hostmanager.aliases = 'project.dev pma.dev mailcatcher.dev errbit.dev statsd.dev gui.dev'
-    end
+
+    #landrush
+    config.landrush.enabled = true
+    config.vm.hostname = "docker.dev"
+    config.landrush.host 'spectware.dev', '192.168.56.142'
+    config.landrush.host 'pma.dev', '192.168.56.142'
+    config.landrush.host 'mailcatcher.dev', '192.168.56.142'
+    config.landrush.host 'errbit.dev', '192.168.56.142'
+    config.landrush.host 'statsd.dev', '192.168.56.142'
+    config.landrush.host 'gui.dev', '192.168.56.142'
 
     #Shared Folders
     config.vm.synced_folder "./vagrant", "/vagrant",
