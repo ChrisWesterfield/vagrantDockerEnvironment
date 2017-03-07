@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-docker-compose exec statsd bash
+vagrant ssh -c /vagrant/bin/consoleStatsd

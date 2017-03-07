@@ -1,3 +1,2 @@
 #!/usr/bin/env bash
-docker-compose exec db mysql -uroot -p"123" 
-
+vagrant ssh -c /vagrant/bin/mysql

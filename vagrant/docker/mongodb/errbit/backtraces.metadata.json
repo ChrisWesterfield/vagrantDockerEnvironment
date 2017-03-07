@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":1,"key":{"_id":1},"name":"_id_","ns":"errbit.backtraces"},{"v":1,"key":{"fingerprint":1},"name":"fingerprint_1","ns":"errbit.backtraces"}]}

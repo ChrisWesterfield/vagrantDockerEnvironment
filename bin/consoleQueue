@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-docker-compose exec queue bash
+vagrant ssh -c /vagrant/bin/consoleQueue

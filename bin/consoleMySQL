@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-docker-compose exec db bash
+vagrant ssh -c /vagrant/bin/consoleMySQL

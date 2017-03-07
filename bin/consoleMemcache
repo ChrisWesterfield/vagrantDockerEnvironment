@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-docker-compose exec memcached bash
+vagrant ssh -c /vagrant/bin/consoleMemcache

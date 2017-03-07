@@ -1,95 +1,99 @@
-# MJR.One Docker Repository
+# MJR.ONE Vagrant Docker Environment
 
-Installs the MJR.ONE IntraNet Environment into an Docker Container
-NOTE: **You need to have docker-sync-stack start in an own terminal up and running.**
-If this process terminates, the docker containers halt
+Install the MJR.ONE Development Environment based on an Debian Vagrant Image extended with docker magic for
+spinning up an complete Environment.
+Included:
+1.  NGINX on the Debian Image used for accessing each Included Container with https and also making it possible,
+if configured to access services from the outside
+2.  Master/Slave Database Setup
+3.  Multi PHP FPM Servers (2) with php 7.1.2
+4.  A Worker Container including cron and supervisor
+5.  Elastic Search
+6.  nginx inside docker with several extensions (check on https://bit.mjr.one/projects/PUBLIC/repos/nginx/browse)
+7.  redis & memcached
+8.  mailcatcher as smtp server/receiver
+9.  phpMyAdmin for DB Managment
+10. statsd
+11. mongoDB
+12. Errbit as error trackin
+
 
 ## Installation
-> 1. git clone git@git.mjr.one:MJR/DockerIntraNet.git ./Intranet
-> 2. cd Intranet
-> 3. ./bin/initProject
-> 4. gem install docker-sync (on mac use ./bin/installDockerSync - requires installed brew)
-> 5. ./bin/dockerBuild
-> 6. ./bin/docker
-> 7. ./bin/consoleMigrate
+> 0. Install Vagrant and either parallels desktop pro(Mac Only) or virtualbox
+> 1. git clone git@git.mjr.one:MJR/DockerIntraNet.git ./Project
+> 2. cd Project
+> 3. ./bin/installPlugins
+If you have an Apple Computer and are Using Parallels Pro (installing Required Plugins). Virtual Box is built in!
+> 3b. ./bin/installParallels
+> 4. ./bin/initProject
+> 5. vagrant up
 
 Your are ready to go
 
+## Usage
 1. Start Docker Container
-./bin/docker
+vagrant up
 
 2. Check CPU Top
 ./bin/checkCPU
 
-3. Open Console
+3. Open Console (more Consoles are defined, check ./bin Folder)
+./bin/cli
 
-** php console **
+4. shutdown
+vagrant halt
 
-./bin/console
-
-** elastic Search container Console **
-
-./bin/consoleES
-
-** mailcatcher container console **
-
-./bin/consoleMailcatcher
-
-** memcache container console **
-
-./bin/console
-
-** MySQL Container Console **
-
-./bin/consoleMySQL
-
-** Nginx Container Console **
-
-./bin/consoleNginx
-
-** phpMyAdmin Container Console **
-
-./bin/consolePma
-
-** Queue Container Console **
-
-./bin/consoleQueue
-
-** Redis Container Console **
-
-./bin/consoleRedis
-
-** statsd, Graphite Container Console **
-
-./bin/consoleStatsd
-
-4. Remove Containers and all Images of Docker (Removes everything!)
+5. Remove Containers
 ./bin/dockerDelete
 
-5. MySQL Cli
+6. Halt Docker-Composer
+./bin/dockerHalt
+
+7. Start Docker Composer
+./bin/dockerUp
+
+8. MySQL Cli
 ./bin/mysql
 
-6. fix Permissions on app folder (useful for symfony 3 apps only!)
-./bin/fixPermissions
+9. dbBackup/dbRecover/mongoBackup/mongoRestore
+for Backup Purpouse
+
+10. Reinitialize Errbit
+./bin/initErrbit
+This only needs to be done if you wan't a fresh start on errbit. Delete the vagrant/docker/mongoDB SubDirectories
 
 ## Urls:
 
-main App: http://localhost:8080
+Errbit:         https://errbit.dev
 
-phpMyAdmin: http://localhost:82
+statsd:         https://statsd.dev
 
-MailCatcher: http://localhost:8070
+MailCatcher:    https://mailcatcher.dev
 
-	
-Informations to xdebug.
-On my system xdebug didn't really work together with phpstorm.
-I created an workaround command.
-If you project is located in the app directory with an .git directory you need to move the 
-** app/bin/fixDirectoryLinking.php**
-file and directories to another location, clone you application into the app directory
-and move them back into the original location or where your bin directories is located.
-afterwards execute the command in the toplvel of the app directory.
-After this inside the docker container for php and queue your current dev machine directory structure is created and the 
-app directory is linked to /var/www
-After this little hack xdebug worked on my host.
+main App:       https://project.dev
 
+phpMyAdmin      https://pma.dev
+
+all Traffic from none https is forwarded to it's https pendant.
+
+The SSL Certificate is self signed and valid for 10 Years (07.03.2027)
+
+
+## Errbit:
+by default an installation is saved to backup directory and should be recovered by running mongoRecover
+
+### Installation User
+
+users: errbit@errbit.example.com
+password: MSjbzOTlxOri
+
+#### Default User:
+user: admin@intranet.dev
+password: 123123
+
+### Default Installed app:
+config.host = 'https://errbit.dev'
+config.project_id = 1 # required, but any positive integer works
+config.project_key = '3dbdd541de97652e087933bb01ecc0fc'
+
+Don't forget to also change your host IP if you modify this in the Vagrantfile!!
