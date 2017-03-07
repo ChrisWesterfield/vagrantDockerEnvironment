@@ -37,7 +37,7 @@ services:
         volumes:
             - "appcode-log:/var/log:rw"
 
-    php:
+    php1:
         image: mjrone/php:7.1.1-alpine
         links:
             - db
@@ -53,6 +53,26 @@ services:
         volumes:
             - "appcode-src:/var/www:rw"
             - "appcode-log:/var/log:rw"
+    php2:
+        environment:
+            PHP_XDEBUG_ENABLED: 1
+            XDEBUG_CONFIG: remote_host=192.168.42.105
+        image: mjrone/php:latest
+        links:
+            - dbMaster
+            - dbSlave
+            - memcached
+            - redis
+            - mailcatcher
+            - es
+            - mongodb
+        networks:
+            - code-network
+        ports:
+            - 9101:9000
+        volumes:
+            - "/vagrant/app:/var/www:rw"
+            - "/vagrant/docker/log:/var/log:rw"
     queue:
         image: mjrone/queue:7.1.1-alpine
         links:
@@ -74,7 +94,8 @@ services:
     nginx:
         image: mjrone/nginx
         links:
-            - php
+            - php1
+            - php2
             - queue
         ports:
             - 8080:80
