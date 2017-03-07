@@ -1,3 +1,2 @@
 #!/usr/bin/env bash
-docker rm $(docker ps -aq)
-docker rmi $(docker images -q)
+vagrant ssh -c /vagrant/bin/dockerDelete

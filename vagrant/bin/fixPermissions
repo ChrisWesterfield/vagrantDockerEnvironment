@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+chmod -R 777 /vagrant/app/var/cache app/var/logs
+chmod -R 777 /vagrant/data
+chmod -R 777 /vagrant/app/var/cache
+chmod -R 777 /vagrant/app/var/tmp
+chmod -R 777 /vagrant/app/var/sessions
+chmod -R 777 /vagrant/app/var/proxy
+chmod -R 777 /vagrant/app/var/bootstrap.php.cache

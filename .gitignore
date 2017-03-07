@@ -2,5 +2,4 @@ app
 .DS_Store
 .idea
 /data/logs/
-/data/db/
 /data/log/

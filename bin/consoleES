@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-docker-compose exec es bash
+vagrant ssh -c /vagrant/bin/consoleES
