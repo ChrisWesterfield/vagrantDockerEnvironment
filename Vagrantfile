@@ -7,7 +7,7 @@ Vagrant.configure("2") do |config|
 
     #Provider
     config.vm.provider "parallels" do |pa, override|
-         override.vm.box	      = "parallels/debian-8.6"
+         override.vm.box          = "parallels/debian-8.6"
          pa.name                      = "docker.dev"
          pa.memory                    = "6192"
          pa.update_guest_tools        = true
@@ -30,18 +30,6 @@ Vagrant.configure("2") do |config|
     #Network
     config.vm.network "private_network", ip: "192.168.56.142"
 
-    #hostmanager
-    config.hostmanager.enabled = true
-    config.hostmanager.manage_host = true
-    config.hostmanager.manage_guest = true
-    config.hostmanager.ignore_private_ip = false
-    config.hostmanager.include_offline = true
-    config.vm.define 'docker.test' do |node|
-        node.vm.hostname = 'docker.dev'
-        node.vm.network :private_network, ip: '192.168.56.142'
-        node.hostmanager.aliases = 'project.dev pma.dev mailcatcher.dev errbit.dev statsd.dev gui.dev'
-    end
-
     #Shared Folders
     config.vm.synced_folder "./vagrant", "/vagrant",
         :nfs => true,
@@ -59,12 +47,12 @@ Vagrant.configure("2") do |config|
     config.vm.provision :docker_compose, env: { "MYSQL_ROOT_PASSWORD"=>"123", "MYSQL_DATABASE"=>"project", "MYSQL_USER"=>"project", "MYSQL_PASSWORD"=>"project", "MYSQL_REPLICATION_USER"=>"replicant", "MYSQL_REPLICATION_PASSWORD"=>"password"}, yml: "/vagrant/docker-compose.yml", rebuild: true, run: "always"
     config.vm.provision :shell, path: "vagrant/provision.sh"
     config.vm.provision :shell, path: "vagrant/bin/fixPermissions", run: "always"
-    config.vm.provision :shell, path: "vagrant/bin/dbRecover", run: "always"
-    config.vm.provision :shell, path: "vagrant/bin/mongoRestore", run: "always"
+    config.vm.provision :shell, path: "vagrant/bin/dbRecover"
+    config.vm.provision :shell, path: "vagrant/bin/mongoRestore"
     
     #triggers
     config.trigger.before :halt do
-	    run_remote "bash /vagrant/bin/dbBackup"
-	    info "Dumping Database befor halt"
+        #run_remote "bash bin/dbBackup"
+        info "Dumping Database befor halt"
     end
 end

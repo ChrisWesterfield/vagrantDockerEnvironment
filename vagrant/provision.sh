@@ -13,7 +13,7 @@ apt-get install -y htop nmap iotop iftop
 
 mv /etc/nginx/sites-enabled /etc/nginx/sites-enabled.org
 
-ln -sfn /vagrant/etc/nginx /etc/nginx/sites-enabled
+ln -sfn /vagrant/etc/sites-enabled/ /etc/nginx/sites-enabled
 
 /usr/sbin/service nginx restart
 

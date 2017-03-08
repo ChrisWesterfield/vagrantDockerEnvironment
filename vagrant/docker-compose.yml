@@ -18,7 +18,7 @@ services:
         restart: unless-stopped
         volumes:
             - "/vagrant/docker/log:/var/log:rw"
-            - "./data/backup:/backup"
+            - "/vagrant/docker/backup:/backup"
     dbSlave:
         command: ["mysqld", "--innodb-buffer-pool-size=20M", "--log-bin=mysql-bin", "--server-id=2"]
         depends_on:
@@ -100,7 +100,7 @@ services:
         volumes:
             - "/vagrant/app:/var/www:rw"
             - "/vagrant/docker/log:/var/log:rw"
-            - "./data/supervisor/etc:/etc/supervisor/conf.d:rw"
+            - "/vagrant/docker/supervisor/etc:/etc/supervisor/conf.d:rw"
 
     #Web Server
     nginx:
@@ -117,7 +117,7 @@ services:
         volumes:
             - "/vagrant/app:/var/www:rw"
             - "/vagrant/docker/log:/var/log:rw"
-            - "./data/etc/nginx:/etc/nginx/sites-available:rw"
+            - "/vagrant/docker/etc/nginx:/etc/nginx/sites-available:rw"
             - "/www/static"
 
     #Cache + Queue
@@ -158,7 +158,7 @@ services:
             PMA_USER: 'root'
             PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
             PMA_PORT: 3306
-            PMA_HOST: dbMaster,dbSlave
+            PMA_HOST: dbMaster
         image: phpmyadmin/phpmyadmin
         links:
             - dbMaster
@@ -202,7 +202,7 @@ services:
             - "27017:27017"
         volumes:
             - "/vagrant/docker/log:/var/log:rw"
-            - "./data/mongodb:/backup"
+            - "/vagrant/docker/mongodb:/backup"
         restart: always
         tty: true
 
@@ -222,17 +222,6 @@ services:
             - RACK_ENV=production
             - MONGO_URL=mongodb://mongodb:27017/errbit
             - SECRET_KEY_BASE=secretKEY123
-
-    docker_compose_ui:
-        restart: always
-        image: francescou/docker-compose-ui:1.4.1
-        container_name: docker_compose_ui
-        hostname: docker_compose_ui
-        ports:
-            - 5000:5000
-        working_dir: /vagrant/docker/docker-compose-projects/
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
 
 networks:
     code-network:
