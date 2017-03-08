@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+git clone ssh://git@bit.spectware.com:7999/swp-core/vera.git ./app
 mkdir ./vagrant/docker
 mkdir ./vagrant/docker/db
 mkdir ./vagrant/docker/backup

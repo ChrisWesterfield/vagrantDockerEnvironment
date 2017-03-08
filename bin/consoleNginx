@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-vagrant ssh -c /vagrant/bin/consoleNginx
+/usr/bin/env vagrant ssh -c /vagrant/bin/consoleNginx

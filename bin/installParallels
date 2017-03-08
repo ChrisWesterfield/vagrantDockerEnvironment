@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-vagrant plugin install vagrant-parallels
+/usr/bin/env vagrant plugin install vagrant-parallels
