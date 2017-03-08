@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-vagrant ssh -c /usr/bin/env docker-compose -f /home/vagrant/docker-compose.yml halt
+/usr/bin/env vagrant ssh -c /vagrant/bin/dockerDown

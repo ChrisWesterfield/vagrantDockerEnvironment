@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
-docker-compose exec php2 bash
+cd /vagrant
+/usr/bin/env docker-compose exec php2 bash

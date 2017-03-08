@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-vagrant ssh -c /vagrant/bin/consoleQueue
+/usr/bin/env vagrant ssh -c /vagrant/bin/consoleQueue
