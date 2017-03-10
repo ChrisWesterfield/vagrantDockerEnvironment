@@ -46,6 +46,9 @@ Vagrant.configure("2") do |config|
     config.vm.provision :shell, path: "vagrant/provision.sh"
     config.vm.provision :reload
     config.vm.provision :docker
+    config.vm.provision :reload
+    config.vm.provision :shell, path: "vagrant/provision2.sh"
+    config.vm.provision :reload
     config.vm.provision :docker_compose, env: { "MYSQL_ROOT_PASSWORD"=>"123", "MYSQL_DATABASE"=>"project", "MYSQL_USER"=>"project", "MYSQL_PASSWORD"=>"project", "MYSQL_REPLICATION_USER"=>"replicant", "MYSQL_REPLICATION_PASSWORD"=>"password"}, yml: "/vagrant/docker-compose.yml", rebuild: true, run: "always"
     config.vm.provision :shell, path: "vagrant/bin/fixPermissions", run: "always"
     config.vm.provision :shell, path: "vagrant/bin/dbRecover"
