@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-/usr/bin/env docker stats $(/usr/bin/env docker inspect -f "{{ .Name }}" $(/usr/bin/env docker ps -q))
+sudo /usr/bin/env docker stats $(sudo /usr/bin/env docker inspect -f "{{ .Name }}" $(sudo /usr/bin/env docker ps -q))

@@ -1,3 +1,9 @@
+4.3.0
+added new Plugin Hostupdator to modify hostfile if bringing env up or down
+added new command checkEntropy
+replaced statsd with different docker implementation
+added post provision task that restarts nginx
+minor improvements
 4.2.0
 switched template for boxes to ubuntu 16.10
 4.1.0 - 4.1.1
