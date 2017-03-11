@@ -170,19 +170,23 @@ services:
         volumes:
             - "/vagrant/docker/log:/var/log:rw"
 
+
     #StatsD
     statsd:
-        image: hopsoft/graphite-statsd
+        image: kamon/grafana_graphite
         networks:
             - code-network
         ports:
-            - "8050:80"
+            - '8050:80'
+            - '8051:81'
+            - '8125:8125/udp'
+            - '8126:8126'
             - "2003-2004:2003-2004"
             - "2023-2024:2023-2024"
-            - "8125:8125/udp"
-            - "8126:8126"
         volumes:
             - "/vagrant/docker/log:/var/log:rw"
+            - "/vagrant/docker/statsd/whisper:/opt/graphite/storage/whisper"
+            - "/vagrant/docker/statsd/grafana:/opt/grafana/data"
 
     #Elastic Search
     es:
