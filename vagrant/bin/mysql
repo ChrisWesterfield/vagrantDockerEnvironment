@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-cd /vagrant
-/usr/bin/env docker-compose exec dbMaster mysql -uroot -p"123"
-

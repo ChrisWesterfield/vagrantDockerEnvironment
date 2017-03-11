@@ -97,3 +97,20 @@ config.project_id = 1 # required, but any positive integer works
 config.project_key = '3dbdd541de97652e087933bb01ecc0fc'
 
 Don't forget to also change your host IP if you modify this in the Vagrantfile!!
+
+
+## Add Lines to sudo file (linux and mac os only!)
+sudo visudo
+Cmnd_Alias VAGRANT_EXPORTS_ADD = /usr/bin/tee -a /etc/exports
+
+Cmnd_Alias VAGRANT_NFSD = /sbin/nfsd restart
+
+Cmnd_Alias VAGRANT_EXPORTS_REMOVE = /usr/bin/sed -E -e /*/ d -ibak /etc/exports
+
+%admin ALL=(root) NOPASSWD: VAGRANT_EXPORTS_ADD, VAGRANT_NFSD, VAGRANT_EXPORTS_REMOVE
+# Allow passwordless startup of Vagrant with vagrant-hostsupdater.
+Cmnd_Alias VAGRANT_HOSTS_ADD = /bin/sh -c echo "*" >> /etc/hosts
+Cmnd_Alias VAGRANT_HOSTS_REMOVE = /usr/bin/env sed -i -e /*/ d /etc/hosts
+%sudo ALL=(root) NOPASSWD: VAGRANT_HOSTS_ADD, VAGRANT_HOSTS_REMOVE
+
+

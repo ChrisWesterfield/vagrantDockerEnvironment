@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-chmod -R 777 /vagrant/app/var/cache
-chmod -R 777 /vagrant/app/var/logs
-chmod -R 777 /vagrant/docker
-chmod -R 777 /vagrant/app/var/cache
-chmod -R 777 /vagrant/app/var/tmp
-chmod -R 777 /vagrant/app/var/sessions
-chmod -R 777 /vagrant/app/var/proxy
-chmod -R 777 /vagrant/app/var/bootstrap.php.cache
+sudo chmod -R 777 /vagrant/app/var/cache
+sudo chmod -R 777 /vagrant/app/var/logs
+sudo chmod -R 777 /vagrant/docker
+sudo chmod -R 777 /vagrant/app/var/cache
+sudo chmod -R 777 /vagrant/app/var/tmp
+sudo chmod -R 777 /vagrant/app/var/sessions
+sudo chmod -R 777 /vagrant/app/var/proxy
+sudo chmod -R 777 /vagrant/app/var/bootstrap.php.cache

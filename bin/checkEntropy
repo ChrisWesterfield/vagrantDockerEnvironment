@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+/usr/bin/env vagrant ssh -c "/bin/cat /proc/sys/kernel/random/entropy_avail"
+

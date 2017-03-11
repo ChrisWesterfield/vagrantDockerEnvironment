@@ -2,8 +2,6 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-    #Hostname
-    config.vm.hostname                =   "docker.dev"
 
     #Provider
     config.vm.provider "parallels" do |pa, override|
@@ -23,12 +21,12 @@ Vagrant.configure("2") do |config|
         override.vm.box             =  "bento/ubuntu-16.10"
     end
 
-    #Port Mapping
-    config.vm.network   "forwarded_port", guest: 3306, host: 3306
-    config.vm.network   "forwarded_port", guest: 11211, host: 11211
-
-    #Network
-    config.vm.network "private_network", ip: "192.168.56.142"
+    #Network, Port Mapping, Hostname
+    config.vm.network                   "forwarded_port", guest: 3306, host: 3306
+    config.vm.network                   "forwarded_port", guest: 11211, host: 11211
+    config.vm.network                   "private_network", ip: "192.168.56.142"
+    config.hostsupdater.aliases         = ["app.dev", "errbit.dev", "gui.dev", "mailcatcher.dev", "pma.dev", "statsd.dev"]
+    config.vm.hostname                  =   "docker.test"
 
     #Shared Folders
     config.vm.synced_folder "./vagrant", "/vagrant",
@@ -54,7 +52,7 @@ Vagrant.configure("2") do |config|
     
     #triggers
     config.trigger.before :halt do
-        #run_remote "bash bin/dbBackup"
         info "Dumping Database befor halt"
+	run_remote "bash /vagrant/bin/dbBackup"
     end
 end
