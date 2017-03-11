@@ -11,3 +11,5 @@ mkdir ./vagrant/docker/log/supervisor
 mkdir ./vagrant/docker/log/logstash
 mkdir ./vagrant/docker/log/kibana
 mkdir ./vagrant/docker/run
+mkdir ./vagrant/docker/statsd/grafana
+mkdir ./vagrant/docker/statsd/whisper
