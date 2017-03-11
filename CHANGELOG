@@ -1,3 +1,5 @@
+4.3.1
+fixed bug in vagrant up
 4.3.0
 added new Plugin Hostupdator to modify hostfile if bringing env up or down
 added new command checkEntropy

@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 cd /vagrant
 sudo /usr/bin/env docker-compose down
+
+echo 1
