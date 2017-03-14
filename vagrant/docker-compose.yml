@@ -53,7 +53,7 @@ services:
             - dbSlave
             - memcached
             - redis
-            - mailcatcher
+            - mailhog
             - es
             - mongodb
         networks:
@@ -73,7 +73,7 @@ services:
             - dbSlave
             - memcached
             - redis
-            - mailcatcher
+            - mailhog
             - es
             - mongodb
         networks:
@@ -93,7 +93,7 @@ services:
             - dbSlave
             - memcached
             - redis
-            - mailcatcher
+            - mailhog
             - es
         networks:
             - code-network
@@ -142,13 +142,19 @@ services:
             - "/vagrant/docker/log:/var/log:rw"
 
     #SMTP Server
-    mailcatcher:
-        image: mjrone/mailcatcher
+    mailhog:
+        image: mjrone/mailhog
         networks:
             - code-network
         ports:
             - "1025:1025"
-            - "8070:1080"
+            - "8070:8025"
+        environment:
+            - "MH_HOSTNAME=mailhog"
+            - "MH_MONGO_COLLECTION=mailhog"
+            - "MH_MONGO_DB=mailhog"
+            - "MH_MONGO_URI=mongodb"
+            - "MH_STORAGE=mongodb"
         volumes:
             - "/vagrant/docker/log:/var/log:rw"
 
