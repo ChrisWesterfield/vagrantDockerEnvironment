@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+openssl req -new -key ./vagrant/etc/ssl/server.key -out ./vagrant/etc/ssl/server.csr
+

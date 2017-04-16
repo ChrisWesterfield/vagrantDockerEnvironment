@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+ssh-keygen -f ./vagrant/etc/ssl/server.key

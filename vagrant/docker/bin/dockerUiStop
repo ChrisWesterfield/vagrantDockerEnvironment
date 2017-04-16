@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+cd /vagrant
+sudo /usr/bin/env docker stop portainer
+sudo /usr/bin/env docker rm portainer
+
+echo 0

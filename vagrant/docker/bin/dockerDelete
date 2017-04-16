@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+sudo /usr/bin/env docker rm $(sudo /usr/bin/env docker ps -aq)
+sudo /usr/bin/env docker rmi $(sudo /usr/bin/env docker images -q)

@@ -2,36 +2,29 @@
 
 export DEBIAN_FRONTEND=noninteractive
 
-apt-get update
-apt-get clean
-apt-get -y autoremove
-apt-get -y upgrade
-dpkg --configure -a
+sudo apt-get update
+sudo apt-get clean
+sudo apt-get -y autoremove
+DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade
+apt-get dist-upgrade -y
+sudo dpkg --configure -a
 
-apt-get install -y nginx-full swapspace zip unzip
-apt-get install -y htop nmap iotop iftop
+sudo apt-get install -y nginx-full swapspace zip unzip haveged tmux docker.io htop nmap iotop iftop mysql-client language-pack-en-base git
 
-mv /etc/nginx/sites-enabled /etc/nginx/sites-enabled.org
+sudo mv /etc/nginx/sites-enabled /etc/nginx/sites-enabled.org
 
-ln -sfn /vagrant/etc/sites-enabled/ /etc/nginx/sites-enabled
+sudo ln -sfn /vagrant/etc/sites-enabled/ /etc/nginx/sites-enabled
 
-/usr/sbin/service nginx restart
+sudo /usr/sbin/service nginx restart
 
-apt-get install multitail mysql-client -y
+sudo echo "127.0.0.1       dbMaster dbSlave php1 php2 nginx es elasticsearch queue memcached mailcatcher redis phpmyadmin statsd mongodb errbit" >> /etc/hosts
 
-echo "127.0.0.1       dbMaster dbSlave php1 php2 nginx es elasticsearch queue memcached mailcatcher redis phpmyadmin statsd mongodb errbit" >> /etc/hosts
-
-apt-get install bash-builtins bash-completion -y
-
-echo "source /vagrant/.bash_profile" >> /home/vagrant/.bashrc
-
-apt-get install haveged -y
-
-apt-get install tmux tshark -y
-
-apt-get install docker.io -y
+sudo echo "source /vagrant/.bash_profile" >> /home/vagrant/.bashrc
 
 sudo gpasswd -a vagrant docker
 
 sudo service docker restart
+
+sudo echo " export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8" >> /etc/profile
 

@@ -1,0 +1,343 @@
+version: '2'
+services:
+    #MySQL
+    dbmaster:
+        command: ["mysqld", "--innodb-buffer-pool-size=20M", "--log-bin=mysql-bin", "--server-id=1"]
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+            MYSQL_REPLICA_USER: ${MYSQL_REPLICATION_USER}
+            MYSQL_REPLICA_PASS: ${MYSQL_REPLICATION_PASSWORD}
+        build:
+            context: /vagrant/build/mysql
+            dockerfile: Dockerfile
+
+        image: mjrone/mysql-replica:latest
+        networks:
+            - code-network
+        ports:
+            - 3306:3306
+        restart: unless-stopped
+        volumes:
+            - "/vagrant/docker/log:/var/log:rw"
+            - "/vagrant/docker/backup:/backup"
+
+    dbslave1:
+        command: ["mysqld", "--innodb-buffer-pool-size=20M", "--log-bin=mysql-bin", "--server-id=2"]
+        depends_on:
+            - dbmaster
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_REPLICA_USER: ${MYSQL_REPLICATION_USER}
+            MYSQL_REPLICA_PASS: ${MYSQL_REPLICATION_PASSWORD}
+            MYSQL_MASTER_PORT: 3306
+            MYSQL_MASTER_SERVER: dbmaster
+            MYSQL_MASTER_WAIT_TIME: 10
+        build:
+            context: /vagrant/build/mysql
+            dockerfile: Dockerfile
+        networks:
+            - code-network
+        ports:
+            - 3307:3306
+        restart: unless-stopped
+        volumes:
+            - "/vagrant/docker/log:/var/log:rw"
+
+    dbslave2:
+        command: ["mysqld", "--innodb-buffer-pool-size=20M", "--log-bin=mysql-bin", "--server-id=2"]
+        depends_on:
+            - dbmaster
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_REPLICA_USER: ${MYSQL_REPLICATION_USER}
+            MYSQL_REPLICA_PASS: ${MYSQL_REPLICATION_PASSWORD}
+            MYSQL_MASTER_PORT: 3306
+            MYSQL_MASTER_SERVER: dbmaster
+            MYSQL_MASTER_WAIT_TIME: 10
+        build:
+            context: /vagrant/build/mysql
+            dockerfile: Dockerfile
+        networks:
+            - code-network
+        ports:
+            - 3308:3306
+        restart: unless-stopped
+        volumes:
+            - "/vagrant/docker/log:/var/log:rw"
+
+    #PHP Stacks
+    php1:
+        environment:
+            PHP_XDEBUG_ENABLED: 1
+            XDEBUG_CONFIG: remote_host=192.168.42.105
+        build:
+            context: /vagrant/build/php
+            dockerfile: Dockerfile
+        links:
+            - dbmaster
+            - dbslave1
+            - dbslave2
+            - memcached
+            - redis
+            - mailhog
+            - elk
+            - mongodb
+        networks:
+            - code-network
+        volumes:
+            - "/var/www:/var/www:rw"
+            - "/vagrant/docker/log:/var/log:rw"
+            - "/vagrant/docker/log/app:/var/www/var/logs"
+
+    php2:
+        environment:
+            PHP_XDEBUG_ENABLED: 1
+            XDEBUG_CONFIG: remote_host=192.168.42.105
+        build:
+            context: /vagrant/build/php
+            dockerfile: Dockerfile
+        links:
+            - dbmaster
+            - dbslave1
+            - dbslave2
+            - memcached
+            - redis
+            - mailhog
+            - elk
+            - mongodb
+        networks:
+            - code-network
+        volumes:
+            - "/var/www:/var/www:rw"
+            - "/vagrant/docker/log:/var/log:rw"
+            - "/vagrant/docker/log/app:/var/www/var/logs"
+
+    php3:
+        environment:
+            PHP_XDEBUG_ENABLED: 1
+            XDEBUG_CONFIG: remote_host=192.168.42.105
+        build:
+            context: /vagrant/build/php
+            dockerfile: Dockerfile
+        links:
+            - dbmaster
+            - dbslave1
+            - dbslave2
+            - memcached
+            - redis
+            - mailhog
+            - elk
+            - mongodb
+        networks:
+            - code-network
+        volumes:
+            - "/var/www:/var/www:rw"
+            - "/vagrant/docker/log:/var/log:rw"
+            - "/vagrant/docker/log/app:/var/www/var/logs"
+
+    queue:
+        environment:
+            PHP_XDEBUG_ENABLED: 1
+            XDEBUG_CONFIG: remote_host=10.254.254.254
+        build:
+            context: /vagrant/build/queue
+            dockerfile: Dockerfile
+        links:
+            - dbmaster
+            - dbslave1
+            - dbslave2
+            - memcached
+            - redis
+            - mailhog
+            - elk
+        networks:
+            - code-network
+        volumes:
+            - "/var/www:/var/www:rw"
+            - "/vagrant/docker/log:/var/log:rw"
+            - "/vagrant/docker/supervisor/etc:/etc/supervisor/conf.d:rw"
+            - "/vagrant/docker/log/app:/var/www/var/logs"
+
+    #Web Server
+    nginx:
+        build:
+            context: /vagrant/build/nginx
+            dockerfile: Dockerfile
+        links:
+            - php1
+            - php2
+            - php3
+            - queue
+            #- bounca
+        networks:
+            - code-network
+        ports:
+            - 8080:80
+        volumes:
+            - "/var/www:/var/www:rw"
+            - "/vagrant/docker/log:/var/log:rw"
+            - "/vagrant/docker/etc/nginx:/etc/nginx/sites-available:rw"
+            - "/vagrant/docker/log/app:/var/www/var/logs"
+            - "/www/static"
+
+    #Cache + Queue
+    memcached:
+        command: memcached -m 1024m
+        build:
+            context: /vagrant/build/memcache/alpine
+            dockerfile: Dockerfile
+        mem_limit: 1g
+        networks:
+            - code-network
+        ports:
+            - "11211:11211"
+        volumes:
+            - "/vagrant/docker/log:/var/log:rw"
+
+    redis:
+        build:
+            context: /vagrant/build/redis/3.2/alpine
+            dockerfile: Dockerfile
+        networks:
+            - code-network
+        ports:
+            - 6379:6379
+        volumes:
+            - "/vagrant/docker/log:/var/log:rw"
+
+    #SMTP Server
+    mailhog:
+        build:
+            context: /vagrant/build/mailhog
+            dockerfile: Dockerfile
+        networks:
+            - code-network
+        ports:
+            - "1025:1025"
+            - "8070:8025"
+        environment:
+            - "MH_HOSTNAME=mailhog"
+            - "MH_MONGO_COLLECTION=mailhog"
+            - "MH_MONGO_DB=mailhog"
+            - "MH_MONGO_URI=mongodb"
+            - "MH_STORAGE=mongodb"
+        volumes:
+            - "/vagrant/docker/log:/var/log:rw"
+
+    #DB Admin
+    phpmyadmin:
+        environment:
+            PMA_USER: 'root'
+            PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            PMA_PORT: 3306
+            PMA_HOST: dbmaster
+        build:
+            context: /vagrant/build/phpmyadmin
+            dockerfile: Dockerfile
+        links:
+            - dbmaster
+            - dbslave1
+            - dbslave2
+        networks:
+            - code-network
+        ports:
+            - "8090:80"
+        volumes:
+            - "/vagrant/docker/log:/var/log:rw"
+
+    #StatsD
+    statsd:
+        build:
+            context: /vagrant/build/statsd
+            dockerfile: Dockerfile
+        networks:
+            - code-network
+        ports:
+            - '8050:80'
+            - '8051:81'
+            - '8125:8125/udp'
+            - '8126:8126'
+            - "2003-2004:2003-2004"
+            - "2023-2024:2023-2024"
+        volumes:
+            - "/vagrant/docker/log:/var/log:rw"
+            - "/vagrant/docker/statsd/whisper:/opt/graphite/storage/whisper"
+            - "/vagrant/docker/statsd/grafana:/opt/grafana/data"
+
+    #Elastic Search
+    elk:
+        image: willdurand/elk
+        ports:
+            - "8060:80"
+            - "9200:9200"
+            - "9300:9300"
+        networks:
+            - code-network
+        volumes:
+            - "./docker/elk/logstash:/etc/logstash"
+            - "./docker/elk/logstash/patterns:/opt/logstash/patterns"
+            - "/vagrant/docker/log:/var/log:rw"
+            - "/var/www:/var/www:rw"
+
+    #Mongo DB
+    mongodb:
+        build:
+            context: /vagrant/build/mongo/3.4
+            dockerfile: Dockerfile
+        networks:
+            - code-network
+        ports:
+            - "27017:27017"
+        volumes:
+            - "/vagrant/docker/log:/var/log:rw"
+            - "/vagrant/docker/mongodb:/backup"
+        restart: always
+        tty: true
+
+    #ErrBit
+    errbit:
+        build:
+            context: /vagrant/build/errbit
+            dockerfile: Dockerfile
+        volumes:
+            - "/vagrant/docker/log:/var/log:rw"
+        links:
+          - mongodb
+        networks:
+            - code-network
+        ports:
+          - "8040:8040"
+        environment:
+            - PORT=8040
+            - RACK_ENV=production
+            - MONGO_URL=mongodb://mongodb:27017/errbit
+            - SECRET_KEY_BASE=secretKEY123
+
+    redisadmin:
+        build:
+            context: /vagrant/build/phpredisadmin
+            dockerfile: Dockerfile
+        networks:
+            - code-network
+        links:
+          - redis
+        ports:
+          - "8030:80"
+        environment:
+          - HOST=redis
+          - PORT=6379
+          - NAME=redis
+
+networks:
+    code-network:
+        driver: bridge
+

@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+docker run --name toran-proxy -d \
+    -p 8010:80 \
+    -v /vagrant/docker/torran:/data/toran-proxy \
+    cedvan/toran-proxy:1.5.3-1

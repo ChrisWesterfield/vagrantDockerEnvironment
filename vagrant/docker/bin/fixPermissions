@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+sudo chmod -R 777 /var/www/var/cache
+sudo chmod -R 777 /var/www/var/logs
+sudo chmod -R 777 /vagrant/docker
+sudo chmod -R 777 /var/www/var/cache
+sudo chmod -R 777 /var/www/var/tmp
+sudo chmod -R 777 /var/www/var/sessions
+sudo chmod -R 777 /var/www/var/proxy
+sudo chmod -R 777 /var/www/var/bootstrap.php.cache

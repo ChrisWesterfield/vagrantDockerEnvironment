@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+/usr/bin/env vagrant ssh -c /vagrant/bin/consolePhp2

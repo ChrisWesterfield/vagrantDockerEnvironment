@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+cd /vagrant
+sudo /usr/bin/env docker-compose exec mongodb /usr/bin/mongodump --out /backup/
+
+echo 1

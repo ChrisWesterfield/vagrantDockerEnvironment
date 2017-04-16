@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+cd /vagrant
+sudo /usr/bin/env docker stop toran-proxy
+sudo /usr/bin/env docker rm toran-proxy
+
+echo 0

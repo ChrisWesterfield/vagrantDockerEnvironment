@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+cd /vagrant
+echo "starting Docker Instances"
+sudo /usr/bin/env docker-compose up -d
+echo "Recovering Mongo and MySQL"
+echo "sleeping for 10s before recovering db"
+sleep 10
+/vagrant/bin/dbRecover
+/vagrant/bin/mongoRecover
+/usr/bin/env docker-compose ps
+cat /vagrant/motd
+echo 1

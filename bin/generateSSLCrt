@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+openssl x509 -req -days 365 -in ./vagrant/etc/ssl/server.csr  -signkey ./vagrant/etc/ssl/server.key -out ./vagrant/etc/ssl/server.crt

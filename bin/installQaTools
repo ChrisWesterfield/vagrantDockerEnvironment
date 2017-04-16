@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+git clone https://github.com/jmolivas/phpqa.git ./bin/phpqa
+cd ./bin/phpqa
+../../app/bin/composer.phar install
+ln -sfn ./bin/phpqa ../phpqa

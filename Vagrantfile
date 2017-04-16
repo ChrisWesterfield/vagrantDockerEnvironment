@@ -25,7 +25,7 @@ Vagrant.configure("2") do |config|
     config.vm.network                   "forwarded_port", guest: 3306, host: 3306
     config.vm.network                   "forwarded_port", guest: 11211, host: 11211
     config.vm.network                   "private_network", ip: "192.168.56.142"
-    config.hostsupdater.aliases         = ["app.dev", "errbit.dev", "gui.dev", "mailcatcher.dev", "pma.dev", "statsd.dev"]
+    config.hostsupdater.aliases         = ["app.test", "errbit.test", "redis.test", "mail.test", "pma.test", "statsd.test", "log.test", "ui.test", "packagist.test", "cockpit.test", "system.test"]
     config.vm.hostname                  =   "docker.test"
 
     #Shared Folders
@@ -42,6 +42,8 @@ Vagrant.configure("2") do |config|
 
     #Provisioning
     config.vm.provision :shell, path: "vagrant/provision.sh"
+    config.vm.provision :shell, path: "vagrant/installPhp.sh"
+    config.vm.provision :shell, path: "vagrant/installCockpit.sh"
     config.vm.provision :reload
     config.vm.provision :docker
     config.vm.provision :docker_compose, env: { "MYSQL_ROOT_PASSWORD"=>"123", "MYSQL_DATABASE"=>"project", "MYSQL_USER"=>"project", "MYSQL_PASSWORD"=>"project", "MYSQL_REPLICATION_USER"=>"replicant", "MYSQL_REPLICATION_PASSWORD"=>"password"}, yml: "/vagrant/docker-compose.yml", rebuild: true, run: "always"
@@ -52,7 +54,15 @@ Vagrant.configure("2") do |config|
     
     #triggers
     config.trigger.before :halt do
-        info "Dumping Database befor halt"
-	run_remote "bash /vagrant/bin/dbBackup"
+        run_remote "bash /vagrant/bin/dbBackup"
+        run_remote "bash /vagrant/bin/dockerUiStop"
+        run_remote "bash /vagrant/bin/packagistStop"
+        info "Dumping Database befor halt and Stopping DockerUI and Packagist"
+    end
+
+    config.trigger.after :up do
+        run_remote "bash /vagrant/bin/dockerUi"
+        run_remote "bash /vagrant/bin/packagistStart"
+        info "Starting Docker UI and Packagist"
     end
 end

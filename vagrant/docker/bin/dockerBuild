@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+cd /vagrant
+sudo /usr/bin/env docker-compose build
+
+echo 1

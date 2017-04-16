@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+echo "shutding Down Docker ENV"
+cd /vagrant
+echo "Backup Database in Progress"
+/vagrant/bin/dbBackup
+echo "shutting down"
+sudo /usr/bin/env docker-compose down
+echo 1
