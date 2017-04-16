@@ -47,7 +47,7 @@ vagrant halt
 ./bin/dockerDelete
 
 6. Halt Docker-Composer
-./bin/dockerHalt
+./bin/dockerDown
 
 7. Start Docker Composer
 ./bin/dockerUp
@@ -64,15 +64,25 @@ This only needs to be done if you wan't a fresh start on errbit. Delete the vagr
 
 ## Urls:
 
-Errbit:         https://errbit.dev
+Errbit:         https://errbit.test
 
-statsd:         https://statsd.dev
+statsd:         https://statsd.test
 
-MailCatcher:    https://mailcatcher.dev
+MailCatcher:    https://mailcatcher.test
 
-main App:       https://project.dev
+main App:       https://app.test
 
-phpMyAdmin      https://pma.dev
+phpMyAdmin      https://pma.test
+
+Toran Proxy	https://packagist.test
+
+Docker UI	https://ui.test
+
+Cockpit		https://cockpit.test
+
+Kibana		https://log.test
+
+Startpage	https://system.test
 
 all Traffic from none https is forwarded to it's https pendant.
 

@@ -1,3 +1,16 @@
+5.0.0
+Moved all .dev domains to the new .test domain
+added Cockpit for Web Administration
+added Portainer als Docker UI
+updated docker-compose container that are pulled up
+replaced mailcatcher with mailhog
+added logstash and kibana
+added errbit
+added new commands
+moved project page from project.dev to app.test
+added php7.1 into vm so php Commands from an Project can be executed instead of the local dev maschine
+minor improvements and bugfixes
+
 4.3.1
 fixed bug in vagrant up
 4.3.0
